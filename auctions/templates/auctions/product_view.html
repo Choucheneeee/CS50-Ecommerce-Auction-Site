@@ -1,0 +1,126 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="div">
+    <style>
+        .div {
+            color: white;
+        }
+        .red-text {
+            color: black;
+        }
+        .product-card {
+            width: 40%;
+            margin: 1%;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+
+    <h2>Active Listing</h2>
+    <a class="btn btn-light" style="position: relative; top:-117px; left:px;" href="{% url 'watchlist' %}">Listings</a>
+    {% if user.is_authenticated %}
+    {% if not var %}
+        <form method="POST" action="{% url 'add_watchlist' listing.title %}">
+            {% csrf_token %}
+              <button style="position: relative; top:-155px; left:1240px;" type="submit"class="btn btn-dark"> Add Watchlist</button>
+              <button style="position: relative; top:-155px; left:1238px;" type="submit"class="btn btn-dark" disabled> Delete Watchlist</button>
+        </form>
+        {% else %}
+        <form method="POST" action="{% url 'delete_watchlist' listing.title %}">
+            {% csrf_token %}
+            <button style="position: relative; top:-155px; left:1240px;" type="submit"class="btn btn-dark" disabled> Add Watchlist</button>
+            <button style="position: relative; top:-155px; left:1238px;" type="submit"class="btn btn-dark" > Delete Watchlist</button>
+        </form>
+        {% endif %}
+    {% endif %}
+    {% if messages %}
+        <div>{{ messages }}</div>
+    {% endif %}
+    
+    <script>
+        // Reload the page every 5 seconds (5000 milliseconds)
+        setInterval(function() {
+            location.reload();
+        }, 15000);  // 5000 milliseconds = 5 seconds
+    </script>
+
+    <div class="product-card card">
+        <img class="card-img-top img-fluid" src="{{ listing.image.url }}" alt="{{ listing.title }} Image">
+        <div class="card-body red-text">
+            <h5 class="card-title red-text">Title: {{ listing.title }}</h5>
+            <p class="card-text">Description: {{ listing.description }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item red-text">Price: {{ listing.price }} TND</li>
+            <li class="list-group-item red-text">Bids: {{ listing.num_bids }}</li>
+            <li class="list-group-item red-text">Interest: {{ listing.get_interests_display }}</li>
+            <li class="list-group-item red-text">Active: {{ listing.active }}</li>
+            {% if listing.winner %}
+                <li class="list-group-item red-text" style="color: red;">Winner: {{ listing.winner }}</li>
+            {% endif %}
+        </ul>
+        <div class="card-body">
+
+            {% if listing.active %}
+            <form method="POST" action="{% url 'bid' title=listing.title %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="bid_amount" style="color: red;">Bid Amount TND</label>
+                    <input type="text" name="bid_amount" class="form-control" id="bid_amount" placeholder="Bid Amount TND">
+                </div>
+                <button type="submit" class="btn btn-block create-account">Confirm Bid</button>
+            </form>
+            {% else %}
+            <div class="form-group">
+                <label for="bid_amount" style="color: red;">Bid Amount TND</label>
+                <input type="text" name="bid_amount" class="form-control" id="bid_amount" placeholder="                                                   Bid non valid                   "   disabled >
+            </div>
+            <button type="submit" class="btn btn-block create-account">Confirm Bid</button>
+            {% endif %}
+            {% if user == listing.user_f %}
+                <form method="POST" action="{% url 'toggle_listing_activation' listing.title %}">
+                    {% csrf_token %}
+                    {% if listing.active %}
+                    <input style="position: relative; top:-1000px; left:650px;" type="submit"class="btn btn-danger" value="{% if listing.active %}Desactive The Listing{% endif %}">
+                    {% endif %}
+                </form>
+               
+            {% endif %}
+            
+        </div>
+        
+        <form method="POST" action="{% url 'add_comment' listing.title %}">
+            {% csrf_token %}
+            <div class="form-floating">
+                <textarea name="comment_text" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Comments</label>
+              </div>
+              <button type="submit" class="btn btn-block create-account">Comment</button>
+        </form>
+       
+        <table class="table-light" style="height: 150%;color: #000; width: 350px; position: relative;">
+            <thead>
+                <tr>
+                    <th>Comment</th>
+    
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                    <tr>
+                        <td>{{ comment.comment }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No comments available for this product.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    
+</div>
+
+{% endblock %}

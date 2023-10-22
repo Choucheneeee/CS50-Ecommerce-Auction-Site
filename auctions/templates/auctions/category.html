@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="div">
+    <style>
+        .div {
+            color: white;
+        }
+    </style>
+
+    <h2>Category</h2>
+    <a class="btn btn-warning" style="position: relative; top:-117px ; left:88px;margin-right: 10px;" href="{% url 'category' %}">Category</a>
+        <table class="table table-hover" style="border: 0; border-collapse: collapse;">
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <td style="border: none; color: red;">
+                    <a  href="{% url 'category_view' category.interest %}">{{ category.interest }}</a>
+                    </td>
+                {% endfor %}
+
+            </tbody>
+        </table>
+</div>
+{% endblock %}

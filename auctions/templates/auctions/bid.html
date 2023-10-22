@@ -1,0 +1,46 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="div">
+    <style>
+        .div {
+            color: white;
+        }
+        .red-text {
+            color: black;
+        }
+        .product-card {
+            width: 30%;
+            margin: 1%;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+
+    <h2>Active Listings</h2>
+    <a class="btn btn-light" style="position: relative; top:-117px; left:0px;" href="{% url 'index' %}">Active Listings</a>
+    {% if messages %}
+        <div>{{ messages }}</div>
+    {% endif %}
+    <h1>Bids for {{ listing.title }}</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="color: red;">User</th>
+                <th style="color: red;">Bid Amount</th>
+                <th style="color: red;">Bid Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bid in bids %}
+            <tr>
+                <td style="color: red;">{{ bid.user.username }}</td>
+                <td style="color: red;">{{ bid.bid_amount }}</li></td>
+                <td style="color: red;">{{ bid.bid_time }}</td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

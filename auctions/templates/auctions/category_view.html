@@ -1,0 +1,47 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="div">
+    <style>
+        .div {
+            color: white;
+        }
+        .red-text {
+            color: black;
+        }
+        .product-card {
+            width: 30%;
+            margin: 1%;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+
+    <h2>Active Listings</h2>
+    <a class="btn btn-light" style="position: relative; top:-117px; left:0px;" href="{% url 'index' %}">Listings</a>
+    {% if messages %}
+        <div>{{ messages }}</div>
+    {% endif %}
+
+    <div class="row">
+        {% for listing in listings %}  {# Use active_listings queryset #}
+            <div class="product-card card">
+                <img class="card-img-top img-fluid" src="{{ listing.image.url }}" alt="{{ listing.title }} Image">
+                <div class="card-body red-text">
+                    <h5 class="card-title red-text">Title: {{ listing.title }}</h5>
+                    <p class="card-text">Description: {{ listing.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item red-text">Price: {{ listing.price }}</li>
+                    <li class="list-group-item red-text">Bids: {{ listing.num_bids}}</li>  {# Use listing.num_bids to access the annotation #}
+                    <li class="list-group-item red-text">Interest: {{ listing.get_interests_display }}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="{% url 'product_view' listing.title %}" class="card-link" style="color: green; position: relative; left: 150px;">View product</a>
+                                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}

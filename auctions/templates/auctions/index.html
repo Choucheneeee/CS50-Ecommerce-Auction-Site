@@ -1,0 +1,64 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="div">
+    <style>
+        .div {
+            color: white;
+        }
+        .red-text {
+            color: black;
+        }
+        .product-card {
+            width: 30%;
+            margin: 1%;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+
+    <h2>Active Listings</h2>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <a class="btn btn-light" style="position: relative; top:-117px; left:0px;" href="{% url 'index' %}">Listings</a>
+    {% if messages %}
+        <div>{{ messages }}</div>
+    {% endif %}
+    <script>
+        // Reload the page every 5 seconds (5000 milliseconds)
+        setInterval(function() {
+            location.reload();
+        }, 5000);  // 5000 milliseconds = 5 seconds
+    </script>
+
+    <div class="row" >
+        {% for listing in active_listings %}  {# Use active_listings queryset #}
+        <a href="{% url 'product_view'  listing.title %}">
+            <div class="product-card card">
+                <a href="{% url 'product_view'  listing.title %}"><img class="card-img-top img-fluid" src="{{ listing.image.url }}" alt="{{ listing.title }} Image"></a>
+                <div class="card-body red-text">
+                    <h5 class="card-title red-text">Title: {{ listing.title }}</h5>
+                    <p class="card-text">Description: {{ listing.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item red-text">Price: {{ listing.price }} TND</li>
+
+                    <li class="list-group-item red-text">Creator: {{ listing.user_f }}</li>
+                    <li class="list-group-item red-text">Bids: {{ listing.num_bids}}</li>  {# Use listing.num_bids to access the annotation #}
+                    <li class="list-group-item red-text">Interest: {{ listing.get_interests_display }}</li>
+                    {% if listing.active %}
+                    <li class="list-group-item red-text" style="color: green;">Active: {{ listing.active }}</li>
+                    {% else %}
+                    <li class="list-group-item red-text" style="color: red;">Active: {{ listing.active }}</li>
+                    {% endif %}
+                    <li class="list-group-item red-text">winner: {{ listing.winner }}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="{% url 'product_view'  listing.title %}" class="card-link" style="color: green; position: relative; left: 150px;">View product</a>
+                                </div>
+            </div></a>{% endfor %}</div></div>
+        
+    </div></a>
+    
+</div>
+{% endblock %}
